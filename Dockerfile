@@ -32,10 +32,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Clone the LocalGov Drupal repository and install PHP dependencies in one layer
-RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html \
-    && composer install --no-interaction --optimize-autoloader \
-    && chown -R www-data:www-data /var/www/html \
+# Clone the LocalGov Drupal repository
+RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html
+
+# Allow the cweagans/composer-patches plugin in Composer
+RUN composer config --no-plugins allow-plugins.cweagans/composer-patches true
+
+# Install PHP dependencies with Composer
+RUN composer install --no-interaction --optimize-autoloader
+
+# Set appropriate permissions for Apache
+RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
 # Expose port 80 for the web server
