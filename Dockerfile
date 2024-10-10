@@ -25,7 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-mysql-client \
     vim \
     nano \
-    libmcrypt-dev \
     && docker-php-ext-install \
     date \
     dom \
@@ -36,7 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pcre \
     pdo \
     session \
-    SimpleXML \
     SPL \
     tokenizer \
     xml \
