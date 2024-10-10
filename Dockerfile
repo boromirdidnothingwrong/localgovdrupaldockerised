@@ -22,11 +22,12 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libzip-dev \
-    mysql-client \
+    default-mysql-client \   # Updated: use default-mysql-client instead of mysql-client
     vim \
     nano \
     libmcrypt-dev \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip gd
+
 
 # Enable Apache rewrite module for Drupal
 RUN a2enmod rewrite
