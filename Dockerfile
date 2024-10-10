@@ -1,5 +1,5 @@
 # Use the official PHP image with Apache
-FROM php:8.1-apache
+FROM php:8.3-apache
 
 # Set environment variables
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
@@ -26,7 +26,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     nano \
     libmcrypt-dev \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip gd \
+    && docker-php-ext-install \
+    date \
+    dom \
+    filter \
+    gd \
+    hash \
+    json \
+    pcre \
+    pdo \
+    session \
+    SimpleXML \
+    SPL \
+    tokenizer \
+    xml \
+    zip \
     && a2enmod rewrite \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && apt-get clean \
@@ -37,7 +51,8 @@ RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html
 
 # Allow necessary Composer plugins
 RUN composer config --no-plugins allow-plugins.cweagans/composer-patches true \
-    && composer config --no-plugins allow-plugins.phpstan/extension-installer true
+    && composer config --no-plugins allow-plugins.phpstan/extension-installer true \
+    && composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
 
 # Install PHP dependencies with Composer
 RUN composer install --no-interaction --optimize-autoloader
