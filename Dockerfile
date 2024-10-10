@@ -35,8 +35,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Clone the LocalGov Drupal repository
 RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html
 
-# Allow the cweagans/composer-patches plugin in Composer
-RUN composer config --no-plugins allow-plugins.cweagans/composer-patches true
+# Allow necessary Composer plugins
+RUN composer config --no-plugins allow-plugins.cweagans/composer-patches true \
+    && composer config --no-plugins allow-plugins.phpstan/extension-installer true
 
 # Install PHP dependencies with Composer
 RUN composer install --no-interaction --optimize-autoloader
