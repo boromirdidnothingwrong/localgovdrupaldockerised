@@ -26,18 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     nano \
     && docker-php-ext-install \
-    date \
-    dom \
-    filter \
     gd \
-    hash \
-    json \
-    pcre \
-    pdo \
-    session \
-    SPL \
-    tokenizer \
-    xml \
+    pdo_mysql \
     zip \
     && a2enmod rewrite \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
