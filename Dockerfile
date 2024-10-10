@@ -9,8 +9,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
 # Set working directory
 WORKDIR /var/www/html
 
-# Install necessary dependencies
-RUN apt-get update && apt-get install -y \
+# Install necessary dependencies, enable extensions, and set up Composer in one layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -26,23 +26,16 @@ RUN apt-get update && apt-get install -y \
     vim \
     nano \
     libmcrypt-dev \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip gd
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip gd \
+    && a2enmod rewrite \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
-# Enable Apache rewrite module for Drupal
-RUN a2enmod rewrite
-
-# Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Clone the LocalGov Drupal repository
-RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html
-
-# Install PHP dependencies with Composer
-RUN composer install --no-interaction --optimize-autoloader
-
-# Set appropriate permissions for Apache
-RUN chown -R www-data:www-data /var/www/html \
+# Clone the LocalGov Drupal repository and install PHP dependencies in one layer
+RUN git clone https://github.com/localgovdrupal/localgov.git /var/www/html \
+    && composer install --no-interaction --optimize-autoloader \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
 # Expose port 80 for the web server
