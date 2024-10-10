@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libzip-dev \
-    default-mysql-client \   # Updated: use default-mysql-client instead of mysql-client
+    default-mysql-client \
     vim \
     nano \
     libmcrypt-dev \
